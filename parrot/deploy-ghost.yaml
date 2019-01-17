@@ -1,0 +1,31 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ghost-blog
+spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          app: ghost-blog
+      spec:
+        containers:
+        # ghost container
+        - name: ghost-blog
+          image: ghost:alpine
+          imagePullPolicy: Always
+          # ghost always starts on this port
+          ports:
+          - containerPort: 2368
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghost-blog
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 2368
+  selector:
+    app: ghost-blog
